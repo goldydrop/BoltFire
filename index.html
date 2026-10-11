@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>BoltFire Interface Replica</title>
+	<!-- Linked External Stylesheet -->
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+	<!-- Native Shell Window Navigation Bar -->
+	<nav id="main-nav">
+		<div class="brand">
+			<div style="background: #65A30D; width: 24px; height: 24px; border-radius: 50%;"></div>
+			<span>BoltFire</span>
+		</div>
+		<ul>
+			<li><a id="nav-settings" class="active" onclick="switchSection('settings')">Settings</a></li>
+			<li><a id="nav-allowlist" onclick="switchSection('allowlist')">Allowlist</a></li>
+			<li><a id="nav-duration" onclick="switchSection('duration')">Duration</a></li>
+			<li><a id="nav-breaks" onclick="switchSection('breaks')">Breaks</a></li>
+			<li><a id="nav-start" onclick="switchSection('start')">Start</a></li>
+		</ul>
+	</nav>
+
+	<!-- SECTION 1: SETTINGS -->
+	<section id="sec-settings" class="active">
+		<h1>Settings</h1>
+		<h2>All BoltFire settings save automatically for future sessions</h2>
+
+		<div class="sub-tabs">
+			<span id="tab-link-preferences" class="sub-tab-link active" onclick="switchSubTab('preferences')">Preferences</span>
+			<span id="tab-link-blocking" class="sub-tab-link" onclick="switchSubTab('blocking')">Blocking</span>
+			<span id="tab-link-notifications" class="sub-tab-link" onclick="switchSubTab('notifications')">Notifications</span>
+		</div>
+
+		<div id="sub-preferences" class="sub-tab-content active">
+			<div class="form-row">
+				<label><input type="checkbox" id="pref-24h"> Use 24 hour notation</label>
+			</div>
+		</div>
+
+		<div id="sub-blocking" class="sub-tab-content">
+			<div class="form-row-split">
+				<div class="form-col">
+					<div class="form-row"><label><input type="checkbox" id="block-taskmgr" checked> Block Windows Task Manager</label></div>
+					<div class="form-row"><label><input type="checkbox" id="block-settings" checked> Block Windows Settings</label></div>
+				</div>
+				<div class="form-col">
+					<span style="font-size: 13px; opacity: 0.8; display:block; margin-bottom: 5px;">Action to take when blocking apps</span>
+					<select id="block-action" style="width: 180px;">
+						<option value="minimize">Minimize (if possible)</option>
+						<option value="close">Force close</option>
+					</select>
+				</div>
+			</div>
+		</div>
+
+		<div id="sub-notifications" class="sub-tab-content">
+			<div class="form-row"><label><input type="checkbox" id="notify-block" checked> Show notifications when an application is blocked</label></div>
+			<div class="form-row"><label><input type="checkbox" id="notify-break" checked> Show notifications when a break starts or ends</label></div>
+			<div class="form-row"><label><input type="checkbox" id="notify-end" checked> Show a notification when a block ends</label></div>
+		</div>
+
+		<div class="action-container">
+			<button class="mmbutton mmbutton-green" onclick="switchSection('allowlist')">Continue to allowlist</button>
+		</div>
+	</section>
+
+	<!-- SECTION 2: ALLOWLIST -->
+	<section id="sec-allowlist">
+		<h1>Allowlist</h1>
+		<h2>Only the apps that are checked will be allowed to open</h2>
+
+		<div class="form-row-split">
+			<div class="form-col list-panel" id="allowlist-panel">
+				<!-- Dynamically populated by Python / JS -->
+			</div>
+			<div class="form-col side-buttons">
+				<button class="mmbutton mmbutton-gray" onclick="fetchRunningApps()">Add recently opened apps</button>
+				<button class="mmbutton mmbutton-gray" onclick="browseForExe()">Add exe file...</button>
+				<button class="mmbutton mmbutton-gray">Import from file...</button>
+				<button class="mmbutton mmbutton-gray">Export to file...</button>
+			</div>
+		</div>
+
+		<div class="action-container">
+			<button class="mmbutton mmbutton-gray" onclick="switchSection('settings')">Change settings</button>
+			<button class="mmbutton mmbutton-green" onclick="switchSection('duration')">Continue to duration</button>
+		</div>
+	</section>
+
+	<!-- SECTION 3: DURATION -->
+	<section id="sec-duration">
+		<h1>Duration</h1>
+		<h2>Only allow selected apps until</h2>
+
+		<div class="form-row" style="gap: 20px;">
+			<label><input type="radio" name="dur-type" value="timer" checked onclick="toggleDurationInput(false)"> Timer</label>
+			<label><input type="radio" name="dur-type" value="restart" onclick="toggleDurationInput(true)"> Restart</label>
+		</div>
+		<div class="form-row" style="gap: 15px; margin-top: 10px; align-items: center;">
+			<select id="duration-select" style="width: 200px;" onchange="updateLiveTime()">
+				<option value="custom">Custom minutes...</option>
+				<option value="5">5 minutes from now</option>
+				<option value="10">10 minutes from now</option>
+				<option value="15" selected>15 minutes from now</option>
+				<option value="20">20 minutes from now</option>
+				<option value="25">25 minutes from now</option>
+				<option value="30">30 minutes from now</option>
+				<option value="40">40 minutes from now</option>
+				<option value="45">45 minutes from now</option>
+				<option value="50">50 minutes from now</option>
+				<option value="60">1 hour from now</option>
+				<option value="90">90 minutes from now</option>
+				<option value="120">2 hours from now</option>
+				<option value="180">3 hours from now</option>
+				<option value="240">4 hours from now</option>
+				<option value="300">5 hours from now</option>
+				<option value="360">6 hours from now</option>
+				<option value="420">7 hours from now</option>
+				<option value="480">8 hours from now</option>
+				<option value="720">12 hours from now</option>
+				<option value="960">16 hours from now</option>
+				<option value="1440">1 day from now</option>
+			</select>
+
+			<!-- New hidden input for custom minutes -->
+			<input type="number" id="custom-minutes" value="2" min="1" style="width: 60px; display: none; text-align: center;" oninput="updateLiveTime()">
+			<span id="custom-minutes-label" style="display: none; font-size: 14px; opacity: 0.8;">min</span>
+
+			<input type="text" id="duration-time-display" value="" readonly style="width: 220px; text-align: center; opacity: 0.6;">
+		</div>
+
+		<div class="action-container">
+			<button class="mmbutton mmbutton-gray" onclick="switchSection('allowlist')">Change allowlist</button>
+			<button class="mmbutton mmbutton-green" onclick="switchSection('breaks')">Continue to breaks</button>
+		</div>
+	</section>
+
+	<!-- SECTION 4: BREAKS -->
+	<section id="sec-breaks">
+		<h1>Breaks</h1>
+		<h2>All apps on your computer are allowed during breaks</h2>
+
+		<div class="form-row" style="gap: 20px;">
+			<label><input type="radio" name="break-type" value="nobreaks" checked> No Breaks</label>
+			<label><input type="radio" name="break-type" value="pomodoro"> Pomodoro</label>
+			<label><input type="radio" name="break-type" value="allowance"> Allowance</label>
+		</div>
+		<p style="opacity: 0.7; font-size: 14px; margin-top: 10px;" id="break-desc">Don't allow other apps for the duration of this session.</p>
+
+		<div class="action-container">
+			<button class="mmbutton mmbutton-gray" onclick="switchSection('duration')">Change duration</button>
+			<button class="mmbutton mmbutton-green" onclick="switchSection('start')">View summary</button>
+		</div>
+	</section>
+
+	<!-- SECTION 5: START SUMMARY -->
+	<section id="sec-start">
+		<h1>You'll only be able to use</h1>
+		<p class="summary-text" id="summary-apps-list">Chrome<br><span class="summary-subtext">... and BoltFire apps.</span></p>
+
+		<h1>Until</h1>
+		<p id="summary-time-desc" style="font-size: 14px; opacity: 0.8; margin-bottom: 40px;">15 minutes from now, with no breaks.</p>
+
+		<div class="action-container">
+			<button class="mmbutton mmbutton-gray" onclick="switchSection('breaks')">Change breaks</button>
+			<button class="mmbutton mmbutton-green" style="padding: 10px 40px; font-size: 16px;" onclick="triggerSystemLock()">Start</button>
+		</div>
+	</section>
+
+	<!-- SECTION 6: ACTIVE BLOCK SESSION SCREEN -->
+	<section id="sec-active">
+		<div id="active-timer-container" style="text-align: center; margin-top: 15vh;">
+			<h2 style="font-weight: 400; font-size: 24px; color: #fafafa; margin-bottom: 20px; opacity: 1; padding-bottom: 0;">
+				Micromanaging you into <span id="active-apps-label" style="font-weight: bold;"></span> for
+			</h2>
+			<div style="display: flex; justify-content: center; align-items: center; gap: 20px;">
+				<h1 id="countdown-display" style="font-size: 56px; color: #fff; margin: 0; text-transform: none; font-family: 'Open Sans', Helvetica, Arial, sans-serif; font-weight: bold;">0 min, 0 sec</h1>
+			</div>
+		</div>
+
+		<div id="session-end-container" style="text-align: center; margin-top: 20vh; display: none;">
+			<button class="mmbutton mmbutton-green" onclick="resetToMainMenu()" style="font-size: 20px; padding: 15px 30px;">Start a new session</button>
+		</div>
+	</section>
+
+	<script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,271 @@
+/* BoltFire Theme Colors & Document Layout */
+html {
+	background: #343438;
+}
+
+body {
+	line-height: 1;
+	color: #fafafa;
+	font-family: "Open Sans", Helvetica, Arial, sans-serif;
+	-webkit-font-smoothing: antialiased;
+	margin: 0;
+	padding: 0;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+}
+
+/* Nav Header Styles */
+nav#main-nav {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	background: #27272A;
+	height: 60px;
+	padding: 0 20px;
+	border-bottom: 1px solid #1e1e20;
+}
+
+.brand {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	font-family: "Antonio", "Bahnschrift Condensed", "Arial Narrow";
+	text-transform: uppercase;
+	font-size: 16px;
+	font-weight: bold;
+}
+
+nav#main-nav ul {
+	display: flex;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	height: 100%;
+}
+
+	nav#main-nav ul li {
+		height: 100%;
+	}
+
+		nav#main-nav ul li a {
+			color: #fafafa;
+			font-size: 14px;
+			font-weight: bold;
+			padding: 0 20px;
+			display: flex;
+			align-items: center;
+			text-decoration: none;
+			height: 100%;
+			box-sizing: border-box;
+			border-bottom: 4px solid transparent;
+			cursor: pointer;
+		}
+
+			nav#main-nav ul li a:hover {
+				background: #3B3B3F;
+			}
+
+			nav#main-nav ul li a.active {
+				background: #3B3B3F;
+				border-bottom: 4px solid #65A30D;
+			}
+
+/* Main Workspace Section */
+section {
+	flex: 1;
+	padding: 40px;
+	box-sizing: border-box;
+	max-width: 800px;
+	width: 100%;
+	margin: 0 auto;
+	display: none; /* Controlled by Tab switching */
+}
+
+	section.active {
+		display: block;
+	}
+
+h1 {
+	font-family: "Antonio", "Bahnschrift Condensed", "Arial Narrow";
+	text-transform: uppercase;
+	font-size: 28px;
+	padding-bottom: 5px;
+	margin: 0 0 5px 0;
+}
+
+h2 {
+	font-size: 14px;
+	padding-bottom: 25px;
+	font-weight: normal;
+	opacity: 0.6;
+	margin: 0;
+}
+
+/* Inner Content Sub-Tabs (Settings Section) */
+.sub-tabs {
+	display: flex;
+	gap: 25px;
+	border-bottom: 1px solid #27272A;
+	margin-bottom: 25px;
+}
+
+.sub-tab-link {
+	font-size: 16px;
+	font-weight: bold;
+	color: #A1A1AA;
+	padding-bottom: 10px;
+	cursor: pointer;
+	border-bottom: 3px solid transparent;
+}
+
+	.sub-tab-link:hover {
+		color: #fafafa;
+	}
+
+	.sub-tab-link.active {
+		color: #fafafa;
+		border-bottom: 3px solid #65A30D;
+	}
+
+.sub-tab-content {
+	display: none;
+	min-height: 180px;
+}
+
+	.sub-tab-content.active {
+		display: block;
+	}
+
+/* Form Controls and Layout elements */
+.form-row {
+	display: flex;
+	align-items: center;
+	margin-bottom: 18px;
+}
+
+.form-row-split {
+	display: flex;
+	justify-content: space-between;
+	gap: 40px;
+}
+
+.form-col {
+	flex: 1;
+}
+
+label {
+	font-size: 14px;
+	cursor: pointer;
+	user-select: none;
+	display: inline-flex;
+	align-items: center;
+}
+
+input[type="checkbox"], input[type="radio"] {
+	transform: scale(1.2);
+	margin-right: 12px;
+	accent-color: #65A30D;
+	cursor: pointer;
+}
+
+select, input[type="text"] {
+	background: #424247 !important;
+	color: #fafafa !important;
+	border: 1px solid #52525B !important;
+	padding: 6px 10px;
+	font-size: 14px;
+	border-radius: 5px;
+	box-sizing: border-box;
+	outline: none;
+}
+
+	select:focus, input[type="text"]:focus {
+		border-color: #65A30D !important;
+	}
+
+/* Dual-list container matching file layouts */
+.list-panel {
+	background: #3B3B3F;
+	border: 1px solid #52525B;
+	border-radius: 5px;
+	padding: 15px;
+	height: 180px;
+	overflow-y: auto;
+}
+
+/* Interface Buttons */
+.action-container {
+	margin-top: 30px;
+	display: flex;
+	justify-content: flex-end;
+	gap: 15px;
+}
+
+.mmbutton {
+	font-weight: bold;
+	padding: 6px 20px;
+	border-style: none;
+	border-radius: 5px;
+	color: #fafafa !important;
+	font-size: 14px;
+	cursor: pointer;
+	transition: background 0.2s;
+}
+
+.mmbutton-green {
+	background-color: #65A30D;
+}
+
+	.mmbutton-green:hover {
+		background: #4D7C0F;
+	}
+
+.mmbutton-gray {
+	background-color: #424247;
+	border: 1px solid #52525B;
+}
+
+	.mmbutton-gray:hover {
+		background: #52525B;
+	}
+
+.side-buttons {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+	.side-buttons .mmbutton {
+		text-align: left;
+		width: 180px;
+	}
+
+/* Summary Output Text */
+.summary-text {
+	font-size: 16px;
+	font-weight: bold;
+	margin-bottom: 25px;
+	color: #65A30D;
+}
+
+.summary-subtext {
+	color: #fafafa;
+	font-weight: normal;
+	font-size: 14px;
+	opacity: 0.6;
+}
+
+/* Hide Navigation and center content during active block */
+body.blocking-active nav#main-nav {
+	display: none;
+}
+
+body.blocking-active section.active {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	height: 100vh;
+}
