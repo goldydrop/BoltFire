@@ -1,40 +1,95 @@
-/* BoltFire Theme Colors & Document Layout */
-html {
-	background: #343438;
+/* Base CSS Variables (Updated dynamically by JS) */
+:root {
+	--accent-color: #65a30d;
+	--accent-hover: #4d7c0f;
+	--bg-main: #343438;
+	--bg-nav: #27272a;
+	--bg-panel: #3b3b3f;
+	/* Layout specifics derived dynamically */
+	--text-primary: #fafafa;
+	--text-secondary: rgba(255,255,255,0.6);
+	--border-color: rgba(255,255,255,0.1);
+}
+
+html, body {
+	margin: 0;
+	padding: 0;
+	height: 100vh;
+	overflow: hidden;
 }
 
 body {
-	line-height: 1;
-	color: #fafafa;
+	background: var(--bg-main);
+	color: var(--text-primary);
 	font-family: "Open Sans", Helvetica, Arial, sans-serif;
 	-webkit-font-smoothing: antialiased;
-	margin: 0;
-	padding: 0;
-	overflow: hidden;
-	display: flex;
-	flex-direction: column;
-	height: 100vh;
+	transition: background 0.3s, color 0.3s;
 }
 
-/* Nav Header Styles */
+/* Custom Adaptive Scrollbar */
+::-webkit-scrollbar {
+	width: 14px;
+	height: 14px;
+}
+
+::-webkit-scrollbar-track {
+	background: var(--bg-main);
+}
+
+::-webkit-scrollbar-thumb {
+	background: var(--border-color);
+	border-radius: 7px;
+	border: 3px solid var(--bg-main);
+}
+
+	::-webkit-scrollbar-thumb:hover {
+		background: var(--text-secondary);
+	}
+
+::-webkit-scrollbar-corner {
+	background: var(--bg-main);
+}
+
+/* Master wrapper handles horizontal vs vertical app layout */
+#app-wrapper {
+	display: flex;
+	flex-direction: column; /* Default: Top Nav */
+	height: 100vh;
+	width: 100vw;
+}
+
+#main-content {
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	overflow-y: auto;
+}
+
+/* BASE MICROMANAGER STYLE (Default) */
 nav#main-nav {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	background: #27272A;
+	background: var(--bg-nav);
 	height: 60px;
 	padding: 0 20px;
-	border-bottom: 1px solid #1e1e20;
+	border-bottom: 1px solid var(--border-color);
 }
 
 .brand {
 	display: flex;
 	align-items: center;
 	gap: 10px;
-	font-family: "Antonio", "Bahnschrift Condensed", "Arial Narrow";
+	font-family: "Antonio", "Bahnschrift Condensed", "Arial Narrow", sans-serif;
 	text-transform: uppercase;
 	font-size: 16px;
 	font-weight: bold;
+}
+
+.brand-logo {
+	width: 24px;
+	height: 24px;
+	border-radius: 50%;
 }
 
 nav#main-nav ul {
@@ -50,7 +105,7 @@ nav#main-nav ul {
 	}
 
 		nav#main-nav ul li a {
-			color: #fafafa;
+			color: var(--text-primary);
 			font-size: 14px;
 			font-weight: bold;
 			padding: 0 20px;
@@ -58,21 +113,21 @@ nav#main-nav ul {
 			align-items: center;
 			text-decoration: none;
 			height: 100%;
-			box-sizing: border-box;
 			border-bottom: 4px solid transparent;
+			box-sizing: border-box;
 			cursor: pointer;
 		}
 
 			nav#main-nav ul li a:hover {
-				background: #3B3B3F;
+				background: var(--bg-panel);
 			}
 
 			nav#main-nav ul li a.active {
-				background: #3B3B3F;
-				border-bottom: 4px solid #65A30D;
+				background: var(--bg-panel);
+				border-bottom: 4px solid var(--accent-color);
 			}
 
-/* Main Workspace Section */
+/* Main Workspace Sections */
 section {
 	flex: 1;
 	padding: 40px;
@@ -80,7 +135,7 @@ section {
 	max-width: 800px;
 	width: 100%;
 	margin: 0 auto;
-	display: none; /* Controlled by Tab switching */
+	display: none;
 }
 
 	section.active {
@@ -88,10 +143,9 @@ section {
 	}
 
 h1 {
-	font-family: "Antonio", "Bahnschrift Condensed", "Arial Narrow";
+	font-family: "Antonio", "Bahnschrift Condensed", sans-serif;
 	text-transform: uppercase;
 	font-size: 28px;
-	padding-bottom: 5px;
 	margin: 0 0 5px 0;
 }
 
@@ -99,34 +153,30 @@ h2 {
 	font-size: 14px;
 	padding-bottom: 25px;
 	font-weight: normal;
-	opacity: 0.6;
+	color: var(--text-secondary);
 	margin: 0;
 }
 
-/* Inner Content Sub-Tabs (Settings Section) */
 .sub-tabs {
 	display: flex;
+	flex-wrap: wrap; /* Added to prevent tab cut-off */
 	gap: 25px;
-	border-bottom: 1px solid #27272A;
+	border-bottom: 1px solid var(--bg-nav);
 	margin-bottom: 25px;
 }
 
 .sub-tab-link {
 	font-size: 16px;
 	font-weight: bold;
-	color: #A1A1AA;
+	color: var(--text-secondary);
 	padding-bottom: 10px;
 	cursor: pointer;
 	border-bottom: 3px solid transparent;
 }
 
-	.sub-tab-link:hover {
-		color: #fafafa;
-	}
-
 	.sub-tab-link.active {
-		color: #fafafa;
-		border-bottom: 3px solid #65A30D;
+		color: var(--text-primary);
+		border-bottom: 3px solid var(--accent-color);
 	}
 
 .sub-tab-content {
@@ -138,7 +188,7 @@ h2 {
 		display: block;
 	}
 
-/* Form Controls and Layout elements */
+/* Forms */
 .form-row {
 	display: flex;
 	align-items: center;
@@ -147,55 +197,78 @@ h2 {
 
 .form-row-split {
 	display: flex;
+	flex-wrap: wrap; /* Added to let columns stack if cramped */
 	justify-content: space-between;
 	gap: 40px;
 }
 
 .form-col {
-	flex: 1;
+	flex: 1 1 200px; /* Updated to allow shrinking/growing based on space */
 }
 
 label {
 	font-size: 14px;
 	cursor: pointer;
-	user-select: none;
 	display: inline-flex;
 	align-items: center;
+}
+
+.input-label {
+	font-size: 13px;
+	color: var(--text-secondary);
 }
 
 input[type="checkbox"], input[type="radio"] {
 	transform: scale(1.2);
 	margin-right: 12px;
-	accent-color: #65A30D;
+	accent-color: var(--accent-color);
 	cursor: pointer;
 }
 
-select, input[type="text"] {
-	background: #424247 !important;
-	color: #fafafa !important;
-	border: 1px solid #52525B !important;
+input[type="color"] {
+	-webkit-appearance: none;
+	border: 1px solid var(--border-color);
+	border-radius: 4px;
+	background: var(--bg-nav);
+	padding: 2px;
+	width: 45px;
+	height: 28px;
+	margin-right: 12px;
+	cursor: pointer;
+}
+
+	input[type="color"]::-webkit-color-swatch-wrapper {
+		padding: 0;
+	}
+
+	input[type="color"]::-webkit-color-swatch {
+		border: none;
+		border-radius: 2px;
+	}
+
+select, input[type="text"], input[type="number"] {
+	background: var(--bg-nav);
+	color: var(--text-primary);
+	border: 1px solid var(--border-color);
 	padding: 6px 10px;
 	font-size: 14px;
 	border-radius: 5px;
-	box-sizing: border-box;
 	outline: none;
 }
 
 	select:focus, input[type="text"]:focus {
-		border-color: #65A30D !important;
+		border-color: var(--accent-color);
 	}
 
-/* Dual-list container matching file layouts */
 .list-panel {
-	background: #3B3B3F;
-	border: 1px solid #52525B;
+	background: var(--bg-panel);
+	border: 1px solid var(--border-color);
 	border-radius: 5px;
 	padding: 15px;
 	height: 180px;
 	overflow-y: auto;
 }
 
-/* Interface Buttons */
 .action-container {
 	margin-top: 30px;
 	display: flex;
@@ -208,28 +281,20 @@ select, input[type="text"] {
 	padding: 6px 20px;
 	border-style: none;
 	border-radius: 5px;
-	color: #fafafa !important;
+	color: #fff;
 	font-size: 14px;
 	cursor: pointer;
-	transition: background 0.2s;
 }
 
 .mmbutton-green {
-	background-color: #65A30D;
+	background-color: var(--accent-color);
 }
-
-	.mmbutton-green:hover {
-		background: #4D7C0F;
-	}
 
 .mmbutton-gray {
-	background-color: #424247;
-	border: 1px solid #52525B;
+	background-color: var(--bg-nav);
+	border: 1px solid var(--border-color);
+	color: var(--text-primary);
 }
-
-	.mmbutton-gray:hover {
-		background: #52525B;
-	}
 
 .side-buttons {
 	display: flex;
@@ -242,30 +307,516 @@ select, input[type="text"] {
 		width: 180px;
 	}
 
-/* Summary Output Text */
+/* Summary */
 .summary-text {
 	font-size: 16px;
 	font-weight: bold;
 	margin-bottom: 25px;
-	color: #65A30D;
+	color: var(--accent-color);
 }
 
 .summary-subtext {
-	color: #fafafa;
+	color: var(--text-primary);
 	font-weight: normal;
 	font-size: 14px;
 	opacity: 0.6;
 }
 
-/* Hide Navigation and center content during active block */
-body.blocking-active nav#main-nav {
-	display: none;
+
+
+/* ==============================================================
+   THEME PARADIGM 2: AFTER EFFECTS PRO WORKSPACE
+   Completely transforms layout into a dense, multi-pane UI
+================================================================*/
+[data-theme="aftereffects"] {
+	--border-color: #111111;
+	--text-primary: #cccccc;
+	--text-secondary: #999999;
 }
 
-body.blocking-active section.active {
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;
-	height: 100vh;
+	[data-theme="aftereffects"] body {
+		font-family: "Segoe UI", Tahoma, sans-serif;
+		font-size: 12px;
+	}
+
+	[data-theme="aftereffects"] #app-wrapper {
+		flex-direction: row;
+	}
+
+	[data-theme="aftereffects"] nav#main-nav {
+		flex-direction: column;
+		justify-content: flex-start;
+		width: 65px;
+		height: 100vh;
+		padding: 10px 0;
+		border-bottom: none;
+		border-right: 1px solid #111;
+		box-sizing: border-box;
+	}
+
+	[data-theme="aftereffects"] .brand {
+		justify-content: center;
+		margin-bottom: 20px;
+	}
+
+	[data-theme="aftereffects"] .brand-text {
+		display: none;
+	}
+	/* Icon only navigation */
+	[data-theme="aftereffects"] nav#main-nav ul {
+		flex-direction: column;
+		width: 100%;
+		height: auto;
+	}
+
+		[data-theme="aftereffects"] nav#main-nav ul li {
+			height: auto;
+			width: 100%;
+		}
+
+			[data-theme="aftereffects"] nav#main-nav ul li a {
+				padding: 8px 5px;
+				box-sizing: border-box;
+				font-size: 10px;
+				text-transform: uppercase;
+				letter-spacing: 0.5px;
+				text-align: center;
+				justify-content: center;
+				border-bottom: none;
+				border-left: 3px solid transparent;
+				font-weight: normal;
+			}
+
+				[data-theme="aftereffects"] nav#main-nav ul li a.active {
+					border-left: 3px solid var(--accent-color);
+					background: #333;
+					color: #fff;
+				}
+
+	/* Workspace Area styling for AE */
+	[data-theme="aftereffects"] section {
+		background: var(--bg-panel);
+		border: 1px solid #111;
+		border-top: 1px solid #444;
+		margin: 15px;
+		padding: 20px;
+		box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+		max-width: 1000px;
+		border-radius: 2px;
+	}
+
+	[data-theme="aftereffects"] h1 {
+		font-family: "Segoe UI", Tahoma, sans-serif;
+		font-size: 14px;
+		color: #fff;
+		text-transform: none;
+		font-weight: 600;
+		margin-bottom: 10px;
+	}
+
+	[data-theme="aftereffects"] h2 {
+		font-size: 11px;
+		padding-bottom: 15px;
+	}
+
+	/* Panels and Tabs */
+	[data-theme="aftereffects"] .sub-tabs {
+		background: var(--bg-nav);
+		border: 1px solid #111;
+		padding: 0;
+		margin-bottom: 15px;
+		gap: 0;
+	}
+
+	[data-theme="aftereffects"] .sub-tab-link {
+		padding: 6px 15px;
+		font-size: 12px;
+		font-weight: normal;
+		border-bottom: none;
+		border-right: 1px solid #111;
+		background: var(--bg-nav);
+		color: #888;
+	}
+
+		[data-theme="aftereffects"] .sub-tab-link.active {
+			background: var(--bg-panel);
+			color: #fff;
+			border-top: 2px solid var(--accent-color);
+			box-shadow: 0 -1px 0 rgba(255,255,255,0.1) inset;
+		}
+
+	[data-theme="aftereffects"] select, [data-theme="aftereffects"] input[type="text"], [data-theme="aftereffects"] input[type="number"] {
+		border-radius: 2px;
+		font-size: 12px;
+		padding: 4px 6px;
+	}
+
+	[data-theme="aftereffects"] .mmbutton {
+		border-radius: 2px;
+		font-weight: normal;
+		font-size: 12px;
+		border: 1px solid #111;
+	}
+
+	[data-theme="aftereffects"] .mmbutton-gray {
+		background: #3a3a3a;
+		box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+	}
+
+	[data-theme="aftereffects"] .list-panel {
+		border-radius: 2px;
+		box-shadow: inset 0 2px 5px rgba(0,0,0,0.3);
+	}
+
+
+
+/* ==============================================================
+   THEME PARADIGM 3: macOS SYSTEM SETTINGS
+   Transforms into a clean, light-themed standard OS window
+================================================================*/
+[data-theme="macos"] {
+	--border-color: #d1d1d6;
+	--text-primary: #1c1c1e;
+	--text-secondary: #8e8e93;
 }
+
+	[data-theme="macos"] body {
+		font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+		font-size: 13px;
+	}
+
+	[data-theme="macos"] #app-wrapper {
+		flex-direction: row;
+	}
+
+	[data-theme="macos"] nav#main-nav {
+		flex-direction: column;
+		justify-content: flex-start;
+		width: 220px;
+		height: 100vh;
+		padding: 30px 10px;
+		border-bottom: none;
+		border-right: 1px solid var(--border-color);
+		box-sizing: border-box;
+	}
+
+	[data-theme="macos"] .brand {
+		margin-bottom: 30px;
+		padding-left: 10px;
+		text-transform: none;
+		font-size: 18px;
+		font-weight: 600;
+		color: #000;
+	}
+
+	[data-theme="macos"] .brand-logo {
+		border-radius: 6px;
+	}
+
+	[data-theme="macos"] nav#main-nav ul {
+		flex-direction: column;
+		width: 100%;
+		height: auto;
+	}
+
+		[data-theme="macos"] nav#main-nav ul li {
+			height: auto;
+		}
+
+			[data-theme="macos"] nav#main-nav ul li a {
+				padding: 8px 12px;
+				height: auto;
+				box-sizing: border-box;
+				font-size: 13px;
+				font-weight: 500;
+				border-radius: 6px;
+				margin-bottom: 5px;
+				border-bottom: none;
+				color: var(--text-primary);
+			}
+
+				[data-theme="macos"] nav#main-nav ul li a.active {
+					background: var(--accent-color);
+					color: #fff;
+				}
+
+				[data-theme="macos"] nav#main-nav ul li a:hover:not(.active) {
+					background: rgba(0,0,0,0.05);
+				}
+
+	/* Workspace styling for macOS */
+	[data-theme="macos"] section {
+		max-width: 700px;
+		padding: 40px 60px;
+	}
+
+	[data-theme="macos"] h1 {
+		font-family: -apple-system;
+		text-transform: none;
+		font-size: 24px;
+		font-weight: 600;
+		letter-spacing: -0.5px;
+		margin-bottom: 8px;
+		color: #000;
+	}
+
+	[data-theme="macos"] h2 {
+		font-size: 13px;
+		padding-bottom: 30px;
+		color: var(--text-secondary);
+		border-bottom: 1px solid var(--border-color);
+		margin-bottom: 20px;
+	}
+
+	[data-theme="macos"] .header-container h2 {
+		border-bottom: none;
+		padding-bottom: 10px;
+	}
+
+	/* Pills tabs for macOS */
+	[data-theme="macos"] .sub-tabs {
+		border-bottom: none;
+		background: rgba(0,0,0,0.05);
+		border-radius: 8px;
+		padding: 2px;
+		display: inline-flex;
+		gap: 0;
+	}
+
+	[data-theme="macos"] .sub-tab-link {
+		font-size: 13px;
+		padding: 6px 16px;
+		border-bottom: none;
+		color: var(--text-primary);
+		border-radius: 6px;
+		font-weight: 500;
+	}
+
+		[data-theme="macos"] .sub-tab-link.active {
+			background: #fff;
+			box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+			border-bottom: none;
+		}
+
+	[data-theme="macos"] select, [data-theme="macos"] input[type="text"], [data-theme="macos"] input[type="number"] {
+		border-radius: 6px;
+		background: #fff;
+		border: 1px solid var(--border-color);
+		color: var(--text-primary);
+		box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+	}
+
+	[data-theme="macos"] .list-panel {
+		background: #fff;
+		border-radius: 8px;
+		box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+	}
+
+	/* macOS Buttons */
+	[data-theme="macos"] .mmbutton {
+		border-radius: 6px;
+		font-weight: 500;
+		font-size: 13px;
+		box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+	}
+
+	[data-theme="macos"] .mmbutton-gray {
+		background: #fff;
+		border: 1px solid var(--border-color);
+		color: var(--text-primary);
+	}
+
+	[data-theme="macos"] .mmbutton-green {
+		background: var(--accent-color);
+		border: 1px solid rgba(0,0,0,0.1);
+		color: #fff;
+	}
+
+/* ==============================================================
+   THEME PARADIGM 4: BOLTFIRE ICONIC
+   A high-energy, glowing, floating-panel aesthetic with sharp contrasts
+================================================================*/
+[data-theme="boltfire-iconic"] {
+	--border-color: rgba(255, 102, 0, 0.4);
+	--text-primary: #ffffff;
+	--text-secondary: #ffb088;
+	--accent-color: #ff6600; /* Fiery orange */
+	--bg-main: #0b0c10;
+	--bg-nav: rgba(31, 40, 51, 0.85);
+	--bg-panel: rgba(21, 24, 33, 0.7);
+}
+
+	[data-theme="boltfire-iconic"] body {
+		font-family: "Antonio", "Bahnschrift Condensed", sans-serif;
+		background: radial-gradient(circle at top left, #1f2833 0%, #0b0c10 100%);
+	}
+
+	/* Floating Layout Setup */
+	[data-theme="boltfire-iconic"] #app-wrapper {
+		flex-direction: row;
+		padding: 20px;
+		gap: 20px;
+		box-sizing: border-box;
+	}
+
+	/* Detached Floating Sidebar */
+	[data-theme="boltfire-iconic"] nav#main-nav {
+		flex-direction: column;
+		justify-content: flex-start;
+		width: 220px;
+		height: calc(100vh - 40px);
+		border-radius: 12px;
+		background: var(--bg-nav);
+		backdrop-filter: blur(12px);
+		-webkit-backdrop-filter: blur(12px);
+		border: 1px solid var(--border-color);
+		box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 15px rgba(255, 102, 0, 0.1);
+		padding-top: 15px;
+	}
+
+	[data-theme="boltfire-iconic"] .brand {
+		justify-content: center;
+		padding: 20px 0 30px 0;
+		font-size: 26px;
+		letter-spacing: 1px;
+		color: var(--accent-color);
+		text-shadow: 0 0 15px rgba(255, 102, 0, 0.6);
+	}
+
+	[data-theme="boltfire-iconic"] nav#main-nav ul {
+		flex-direction: column;
+		width: 100%;
+		height: auto;
+	}
+
+		[data-theme="boltfire-iconic"] nav#main-nav ul li a {
+			padding: 15px 25px;
+			font-size: 18px;
+			letter-spacing: 1.5px;
+			border-bottom: none;
+			border-left: 4px solid transparent;
+			margin: 5px 15px;
+			border-radius: 8px;
+			transition: all 0.2s ease;
+		}
+
+			[data-theme="boltfire-iconic"] nav#main-nav ul li a.active,
+			[data-theme="boltfire-iconic"] nav#main-nav ul li a:hover {
+				background: rgba(255, 102, 0, 0.15);
+				border-left: 4px solid var(--accent-color);
+				color: var(--accent-color);
+				box-shadow: inset 20px 0 20px -20px rgba(255, 102, 0, 0.5);
+			}
+
+	/* Floating Main Content Area */
+	[data-theme="boltfire-iconic"] #main-content {
+		height: calc(100vh - 40px);
+		border-radius: 12px;
+		background: var(--bg-panel);
+		backdrop-filter: blur(12px);
+		-webkit-backdrop-filter: blur(12px);
+		border: 1px solid var(--border-color);
+		box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+	}
+
+	[data-theme="boltfire-iconic"] section {
+		max-width: 900px;
+		padding: 50px;
+	}
+
+	[data-theme="boltfire-iconic"] h1 {
+		color: var(--accent-color);
+		font-size: 42px;
+		letter-spacing: 2px;
+		text-shadow: 0 2px 5px rgba(0,0,0,0.8);
+		margin-bottom: 10px;
+	}
+
+	[data-theme="boltfire-iconic"] h2 {
+		font-size: 18px;
+		color: var(--text-secondary);
+		letter-spacing: 1px;
+	}
+
+	/* Glowing Sub-tabs (UPDATED TO PREVENT CUT OFFS) */
+	[data-theme="boltfire-iconic"] .sub-tabs {
+		border-bottom: 2px solid rgba(255, 102, 0, 0.2);
+		gap: 15px;
+		margin-bottom: 35px;
+	}
+
+	[data-theme="boltfire-iconic"] .sub-tab-link {
+		font-size: 14px;
+		letter-spacing: 1px;
+		padding: 10px 5px;
+		text-transform: uppercase;
+	}
+
+		[data-theme="boltfire-iconic"] .sub-tab-link.active {
+			color: var(--accent-color);
+			border-bottom: 3px solid var(--accent-color);
+			text-shadow: 0 0 10px rgba(255, 102, 0, 0.5);
+		}
+
+	/* Neon Data Panels */
+	[data-theme="boltfire-iconic"] .list-panel {
+		background: rgba(0, 0, 0, 0.4);
+		border: 1px solid rgba(255, 102, 0, 0.2);
+		border-radius: 8px;
+		box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+	}
+
+	/* Fiery Gradient Buttons */
+	[data-theme="boltfire-iconic"] .mmbutton {
+		font-family: "Antonio", "Bahnschrift Condensed", sans-serif;
+		font-size: 18px;
+		letter-spacing: 1px;
+		text-transform: uppercase;
+		border-radius: 6px;
+	}
+
+	[data-theme="boltfire-iconic"] .mmbutton-green {
+		background: linear-gradient(45deg, #cc2900, #ff8800);
+		border: none;
+		box-shadow: 0 4px 15px rgba(255, 102, 0, 0.3);
+		transition: transform 0.1s, box-shadow 0.1s;
+	}
+
+		[data-theme="boltfire-iconic"] .mmbutton-green:active {
+			transform: scale(0.97);
+			box-shadow: 0 2px 8px rgba(255, 102, 0, 0.5);
+		}
+
+	[data-theme="boltfire-iconic"] .mmbutton-gray {
+		background: rgba(0,0,0,0.4);
+		border: 1px solid var(--border-color);
+	}
+
+	/* Deep Space Inputs */
+	[data-theme="boltfire-iconic"] input[type="text"],
+	[data-theme="boltfire-iconic"] input[type="number"],
+	[data-theme="boltfire-iconic"] select {
+		background: rgba(0,0,0,0.5);
+		border: 1px solid var(--border-color);
+		color: var(--text-primary);
+		border-radius: 6px;
+		font-family: inherit;
+		font-size: 16px;
+	}
+
+		[data-theme="boltfire-iconic"] input[type="text"]:focus,
+		[data-theme="boltfire-iconic"] input[type="number"]:focus,
+		[data-theme="boltfire-iconic"] select:focus {
+			border-color: var(--accent-color);
+			box-shadow: 0 0 10px rgba(255, 102, 0, 0.3);
+		}
+
+	/* Custom Scrollbar for Iconic Theme */
+	[data-theme="boltfire-iconic"] ::-webkit-scrollbar-thumb {
+		background: rgba(255, 102, 0, 0.5);
+		border-color: #0b0c10;
+	}
+
+		[data-theme="boltfire-iconic"] ::-webkit-scrollbar-thumb:hover {
+			background: var(--accent-color);
+		}

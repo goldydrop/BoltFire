@@ -5,10 +5,49 @@ import subprocess
 import time
 import threading
 import ctypes
+import pystray
+from PIL import Image, ImageDraw
 
 REG_PATH = r"SOFTWARE\BoltFire\Settings"
 
+def create_tray_icon():
+    image = Image.new('RGB', (64, 64), color=(101, 163, 13)) # BoltFire Green
+    draw = ImageDraw.Draw(image)
+    draw.ellipse((16, 16, 48, 48), fill=(255, 255, 255))
+    return image
+
+def start_system_tray(bridge):
+    def on_click(icon, item):
+        bridge._window.show() # Unhide the webview window using the private attribute
+        icon.stop()          # Destroy the tray icon
+
+    # This loop continuously updates the tooltip text on hover
+    def update_tooltip(icon):
+        icon.visible = True
+        while bridge.is_locked and icon.visible:
+            remaining = bridge.end_time - time.time()
+            if remaining > 0:
+                mins = int(remaining // 60)
+                secs = int(remaining % 60)
+                icon.title = f"{mins} mins, {secs} secs left"
+            else:
+                icon.title = "Session complete!"
+            time.sleep(1)
+
+    icon = pystray.Icon("BoltFire", create_tray_icon(), "BoltFire", menu=pystray.Menu(
+        pystray.MenuItem("Open", on_click, default=True)
+    ))
+    
+    # Start the tooltip updater loop alongside the icon
+    threading.Thread(target=update_tooltip, args=(icon,), daemon=True).start()
+    icon.run()
+
 class BoltFireBridge:
+    def __init__(self):
+        self.is_locked = False
+        self.end_time = 0
+        self._window = None # Hidden from pywebview serialization
+
     def close_existing_managers(self):
         try:
             subprocess.run(["taskkill", "/F", "/IM", "BoltFire.exe"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -68,6 +107,9 @@ class BoltFireBridge:
         if duration_mins == 0:
             return {"status": "error", "message": "No duration set!"}
 
+        self.is_locked = True
+        self.end_time = time.time() + (duration_mins * 60)
+
         print(f"Starting block for {duration_mins} minutes. Allowed: {whitelist_data}")
 
         thread = threading.Thread(
@@ -80,7 +122,6 @@ class BoltFireBridge:
         return {"status": "success", "message": f"Lock activated for {duration_mins} minutes!"}
 
     def _enforce_lock_loop(self, whitelist_data, block_task, block_sets, duration_mins, block_action, notify_end):
-        end_time = time.time() + (duration_mins * 60)
         whitelist = [app.strip().lower() for app in whitelist_data.split(',')]
         
         # Auto-allowlist the program itself (python.exe or a compiled .exe)
@@ -100,7 +141,7 @@ class BoltFireBridge:
 
         user32 = ctypes.windll.user32
         
-        while time.time() < end_time or duration_mins == -1:
+        while time.time() < self.end_time or duration_mins == -1:
             try:
                 cmd = 'Get-Process | Where-Object {$_.MainWindowTitle} | Select-Object -Property Name, Id | ConvertTo-Csv -NoTypeInformation'
                 output = subprocess.check_output(
@@ -143,6 +184,7 @@ class BoltFireBridge:
             time.sleep(2) 
             
         print("Timer complete. Lock lifted.")
+        self.is_locked = False
         
         if notify_end:
             toast_ps = r"""
@@ -178,5 +220,16 @@ if __name__ == "__main__":
         resizable=True,
         min_size=(700, 500)
     )
+
+    bridge._window = window # Assigned to the private attribute
+
+    def on_closing():
+        if bridge.is_locked:
+            window.hide() 
+            threading.Thread(target=start_system_tray, args=(bridge,), daemon=True).start()
+            return False  
+        return True
+
+    window.events.closing += on_closing
 
     webview.start(private_mode=False)

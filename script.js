@@ -32,7 +32,6 @@ function toggleDurationInput(disableDropdown) {
     inlineDisplay.style.opacity = disableDropdown ? "0.2" : "0.6";
 }
 
-// Dynamically calculates the future completion time based on the dropdown duration
 function updateLiveTime() {
     const select = document.getElementById('duration-select');
     const display = document.getElementById('duration-time-display');
@@ -56,8 +55,7 @@ function updateLiveTime() {
 
     let hours = future.getHours();
     const ampm = hours >= 12 ? 'PM' : 'AM';
-    hours = hours % 12;
-    hours = hours ? hours : 12; 
+    hours = hours % 12 || 12; 
     const minutes = future.getMinutes().toString().padStart(2, '0');
     
     const day = future.getDate();
@@ -68,74 +66,152 @@ function updateLiveTime() {
     display.value = `${hours}:${minutes} ${ampm}, ${day} ${month} ${year}`;
 }
 
-// --- SETTINGS SAVE/LOAD LOGIC ---
-function saveSettings() {
-    const settings = {};
-    
-    const pref24h = document.getElementById('pref-24h');
-    if (pref24h) settings.pref24h = pref24h.checked;
-    
-    const blockTaskmgr = document.getElementById('block-taskmgr');
-    if (blockTaskmgr) settings.blockTaskmgr = blockTaskmgr.checked;
-    
-    const blockSettings = document.getElementById('block-settings');
-    if (blockSettings) settings.blockSettings = blockSettings.checked;
-    
-    const blockAction = document.getElementById('block-action');
-    if (blockAction) settings.blockAction = blockAction.value;
-    
-    const notifyBlock = document.getElementById('notify-block');
-    if (notifyBlock) settings.notifyBlock = notifyBlock.checked;
-    
-    const notifyBreak = document.getElementById('notify-break');
-    if (notifyBreak) settings.notifyBreak = notifyBreak.checked;
-    
-    const notifyEnd = document.getElementById('notify-end');
-    if (notifyEnd) settings.notifyEnd = notifyEnd.checked;
+// --- THEME & SETTINGS LOGIC ---
+const themeColorDefaults = {
+    'micromanager': { accent: '#65a30d', accentHover: '#4d7c0f', bgMain: '#343438', bgNav: '#27272a', bgPanel: '#3b3b3f' },
+    'aftereffects': { accent: '#2d8ceb', accentHover: '#1e70c5', bgMain: '#232323', bgNav: '#1e1e1e', bgPanel: '#2b2b2b' },
+    'macos': { accent: '#007aff', accentHover: '#0056b3', bgMain: '#f5f5f7', bgNav: '#e8e8ed', bgPanel: '#ffffff' },
+    'boltfire-iconic': { accent: '#ff6600', accentHover: '#cc2900', bgMain: '#0b0c10', bgNav: '#1f2833', bgPanel: '#151821' }
+};
 
+function saveSettings() {
+    const currentTheme = document.querySelector('input[name="theme-select"]:checked')?.value || 'micromanager';
+    
+    // Fetch existing so we don't overwrite colors saved for other paradigms
+    let settings = JSON.parse(localStorage.getItem('boltfireSettings') || '{}');
+    
+    settings.pref24h = document.getElementById('pref-24h')?.checked;
+    settings.blockTaskmgr = document.getElementById('block-taskmgr')?.checked;
+    settings.blockSettings = document.getElementById('block-settings')?.checked;
+    settings.blockAction = document.getElementById('block-action')?.value;
+    settings.notifyBlock = document.getElementById('notify-block')?.checked;
+    settings.notifyBreak = document.getElementById('notify-break')?.checked;
+    settings.notifyEnd = document.getElementById('notify-end')?.checked;
+    settings.theme = currentTheme;
+    
+    // Initialize per-theme memory if missing
+    if (!settings.themeColors) {
+        settings.themeColors = JSON.parse(JSON.stringify(themeColorDefaults));
+    }
+    
+    // Save current colors to the currently active paradigm
+    settings.themeColors[currentTheme] = {
+        accent: document.getElementById('color-accent').value,
+        accentHover: document.getElementById('color-accent-hover').value,
+        bgMain: document.getElementById('color-bg-main').value,
+        bgNav: document.getElementById('color-bg-nav').value,
+        bgPanel: document.getElementById('color-bg-panel').value
+    };
+    
     localStorage.setItem('boltfireSettings', JSON.stringify(settings));
 }
 
+function loadThemeColors(themeName) {
+    let settings = JSON.parse(localStorage.getItem('boltfireSettings') || '{}');
+    let colors = themeColorDefaults[themeName]; // start with defaults
+    
+    // Override with user's saved colors for this specific paradigm if they exist
+    if (settings.themeColors && settings.themeColors[themeName]) {
+        colors = settings.themeColors[themeName];
+    } else if (settings.customColors && themeName === (settings.theme || 'micromanager')) {
+        // Fallback for previous single-color save architecture
+        colors = settings.customColors;
+    }
+
+    document.getElementById('color-accent').value = colors.accent;
+    document.getElementById('color-accent-hover').value = colors.accentHover;
+    document.getElementById('color-bg-main').value = colors.bgMain;
+    document.getElementById('color-bg-nav').value = colors.bgNav;
+    document.getElementById('color-bg-panel').value = colors.bgPanel;
+    
+    applyCustomColorsToCSS();
+}
+
 function loadSettings() {
-    const savedSettings = localStorage.getItem('boltfireSettings');
-    if (savedSettings) {
-        const settings = JSON.parse(savedSettings);
+    const saved = localStorage.getItem('boltfireSettings');
+    if (saved) {
+        const settings = JSON.parse(saved);
         
-        const pref24h = document.getElementById('pref-24h');
-        if (pref24h && settings.pref24h !== undefined) pref24h.checked = settings.pref24h;
-        
-        const blockTaskmgr = document.getElementById('block-taskmgr');
-        if (blockTaskmgr && settings.blockTaskmgr !== undefined) blockTaskmgr.checked = settings.blockTaskmgr;
-        
-        const blockSettings = document.getElementById('block-settings');
-        if (blockSettings && settings.blockSettings !== undefined) blockSettings.checked = settings.blockSettings;
-        
-        const blockAction = document.getElementById('block-action');
-        if (blockAction && settings.blockAction !== undefined) blockAction.value = settings.blockAction;
-        
-        const notifyBlock = document.getElementById('notify-block');
-        if (notifyBlock && settings.notifyBlock !== undefined) notifyBlock.checked = settings.notifyBlock;
-        
-        const notifyBreak = document.getElementById('notify-break');
-        if (notifyBreak && settings.notifyBreak !== undefined) notifyBreak.checked = settings.notifyBreak;
-        
-        const notifyEnd = document.getElementById('notify-end');
-        if (notifyEnd && settings.notifyEnd !== undefined) notifyEnd.checked = settings.notifyEnd;
+        const checkboxMap = {
+            'pref-24h': 'pref24h',
+            'block-taskmgr': 'blockTaskmgr',
+            'block-settings': 'blockSettings',
+            'notify-block': 'notifyBlock',
+            'notify-break': 'notifyBreak',
+            'notify-end': 'notifyEnd'
+        };
+
+        for (const [id, key] of Object.entries(checkboxMap)) {
+            if (document.getElementById(id) && settings[key] !== undefined) {
+                document.getElementById(id).checked = settings[key];
+            }
+        }
+
+        if (settings.blockAction && document.getElementById('block-action')) {
+            document.getElementById('block-action').value = settings.blockAction;
+        }
+
+        if (settings.theme) {
+            const themeRadio = document.querySelector(`input[name="theme-select"][value="${settings.theme}"]`);
+            if (themeRadio) {
+                themeRadio.checked = true;
+                document.documentElement.setAttribute('data-theme', settings.theme);
+            }
+            loadThemeColors(settings.theme);
+        } else {
+            loadThemeColors('micromanager');
+        }
+    } else {
+        loadThemeColors('micromanager');
     }
 }
 
+function applyThemePreset(themeName) {
+    document.documentElement.setAttribute('data-theme', themeName);
+}
+
+function resetThemeColors() {
+    const currentTheme = document.querySelector('input[name="theme-select"]:checked')?.value || 'micromanager';
+    
+    if (themeColorDefaults[currentTheme]) {
+        const colors = themeColorDefaults[currentTheme];
+        document.getElementById('color-accent').value = colors.accent;
+        document.getElementById('color-accent-hover').value = colors.accentHover;
+        document.getElementById('color-bg-main').value = colors.bgMain;
+        document.getElementById('color-bg-nav').value = colors.bgNav;
+        document.getElementById('color-bg-panel').value = colors.bgPanel;
+        
+        applyCustomColorsToCSS();
+        saveSettings(); // Locks the factory defaults back into memory
+    }
+}
+
+function applyCustomColorsToCSS() {
+    const root = document.documentElement;
+    root.style.setProperty('--accent-color', document.getElementById('color-accent').value);
+    root.style.setProperty('--accent-hover', document.getElementById('color-accent-hover').value);
+    root.style.setProperty('--bg-main', document.getElementById('color-bg-main').value);
+    root.style.setProperty('--bg-nav', document.getElementById('color-bg-nav').value);
+    root.style.setProperty('--bg-panel', document.getElementById('color-bg-panel').value);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
-    // Load previously saved settings
     loadSettings();
 
-    // Attach listeners to save settings automatically when changed
-    const settingInputs = [
-        'pref-24h', 'block-taskmgr', 'block-settings', 
-        'block-action', 'notify-block', 'notify-break', 'notify-end'
-    ];
-    settingInputs.forEach(id => {
+    document.querySelectorAll('input[type="checkbox"], select').forEach(el => el.addEventListener('change', saveSettings));
+
+    document.querySelectorAll('input[name="theme-select"]').forEach(radio => {
+        radio.addEventListener('change', (e) => {
+            applyThemePreset(e.target.value);
+            loadThemeColors(e.target.value); // Load remembered colors for this paradigm instead of wiping them
+            saveSettings();
+        });
+    });
+
+    ['color-accent', 'color-accent-hover', 'color-bg-main', 'color-bg-nav', 'color-bg-panel'].forEach(id => {
         const el = document.getElementById(id);
         if (el) {
+            el.addEventListener('input', applyCustomColorsToCSS);
             el.addEventListener('change', saveSettings);
         }
     });
@@ -144,14 +220,11 @@ document.addEventListener('DOMContentLoaded', () => {
     setInterval(updateLiveTime, 10000); 
 });
 
-// Compiles Checked items and Choices into the final summary block window layout
+// --- BACKEND MEMORY SHELL INTEGRATION ---
 function buildSummaryScreen() {
-    const checkedApps = [];
-    document.querySelectorAll('.app-item:checked').forEach(checkbox => {
-        checkedApps.push(checkbox.value);
-    });
-
+    const checkedApps = Array.from(document.querySelectorAll('.app-item:checked')).map(cb => cb.value);
     const appsDisplay = document.getElementById('summary-apps-list');
+    
     if (checkedApps.length > 0) {
         appsDisplay.innerHTML = `${checkedApps.join('<br>')}<br><span class="summary-subtext">... and BoltFire apps.</span>`;
     } else {
@@ -175,16 +248,10 @@ function buildSummaryScreen() {
     }
 }
 
-// Timer Variables
 let countdownInterval;
 
-// Native Local Memory Execution Bridge
 function triggerSystemLock() {
-    const checkedApps = [];
-    document.querySelectorAll('.app-item:checked').forEach(checkbox => {
-        checkedApps.push(checkbox.value);
-    });
-
+    const checkedApps = Array.from(document.querySelectorAll('.app-item:checked')).map(cb => cb.value);
     const durType = document.querySelector('input[name="dur-type"]:checked').value;
     let durationMins = 0;
     
@@ -202,7 +269,7 @@ function triggerSystemLock() {
         blockTaskManager: document.getElementById("block-taskmgr")?.checked ?? true,
         blockSettings: document.getElementById("block-settings")?.checked ?? true,
         durationMinutes: durationMins,
-        blockAction: document.getElementById("block-action").value,
+        blockAction: document.getElementById("block-action")?.value ?? "close",
         notifyEnd: document.getElementById("notify-end")?.checked ?? true
     };
 
@@ -215,7 +282,6 @@ function triggerSystemLock() {
             }
         });
     } else {
-        // Fallback for testing in browser without python bridge
         startVisualTimer(checkedApps, durationMins);
     }
 }
@@ -257,7 +323,6 @@ function resetToMainMenu() {
     switchSection('settings'); 
 }
 
-// Fetch currently running apps from Python
 function fetchRunningApps() {
     if (window.pywebview && window.pywebview.api) {
         window.pywebview.api.get_running_apps().then(function(apps) {
@@ -278,7 +343,6 @@ function fetchRunningApps() {
     }
 }
 
-// Trigger native file browser
 function browseForExe() {
     if (window.pywebview && window.pywebview.api) {
         window.pywebview.api.browse_for_exe().then(function(apps) {
