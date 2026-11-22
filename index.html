@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="fallout">
+<head>
+	<meta charset="UTF-8">
+	<title>BoltFire - Multi-Paradigm Interface</title>
+	<link rel="stylesheet" href="style.css">
+	<link rel="icon" type="image/x-icon" href="boltfire logo_main.ico">
+</head>
+<body>
+
+	<div id="app-wrapper">
+		<!-- Navigation Sidebar / Topbar depending on theme -->
+		<nav id="main-nav">
+			<div class="brand">
+				<svg class="brand-logo" viewBox="0 0 629 608" xmlns="http://www.w3.org/2000/svg" style="width: 35px; height: 35px; fill-rule:evenodd; clip-rule:evenodd; stroke-linejoin:round; stroke-miterlimit:2;">
+					<g transform="matrix(1,0,0,1,-922,-1303)">
+						<!-- This ellipse now absorbs whatever your theme accent color is -->
+						<ellipse cx="1226.898" cy="1602.527" rx="279.151" ry="288.897" style="fill: var(--accent-color);" />
+					</g>
+					<path style="fill: #000;" d="M390,212C388.172,153.501 399.113,151.226 373,99C368.535,90.07 323.338,38.831 275,63C212.835,94.083 219.023,173.92 216.984,209.224C215.625,209.765 200.071,215.965 200,216C198.723,216.638 193.151,217.885 192.441,219.045C189.933,223.148 193.513,236.486 192,271C181.845,270.538 182.062,270.296 143.22,266.122C145.066,285.701 148.438,294.415 146.806,304C145.492,311.722 139.997,320.01 135,335C97.861,446.418 237.195,600.403 394,522C399.432,519.284 401.622,521.028 425.128,497.268C431.224,491.106 437.353,480.647 447,471C451.109,466.891 478.37,412.187 480,394C485.936,327.761 460.048,330.228 463.296,265.704C461.277,267.506 443.943,283.005 443.661,291.684C443.269,303.719 439.195,299.484 426.056,298.528C421.836,298.222 419.757,299.144 418.335,296.517C417.166,294.357 418.074,291.048 418.042,288.532C417.65,257.965 418.076,221.739 418,219C413.587,217.962 409.413,216.038 405,215C403.809,214.72 403.889,214.778 390,212ZM284.06,108.252C282.851,139.903 288.209,142.791 266,165C262.421,168.579 258.375,174.071 257.393,180.748C256.089,189.616 258.398,199.584 256.891,200.283C251.257,202.899 249.923,202.036 249.728,200.901C249.388,198.922 250.379,171.673 250.286,148.613C250.263,142.888 252.724,139.156 255.105,134.315C257.052,130.355 258.469,124.926 261,122C278.776,101.445 291.587,92.233 305,93.538C317.827,94.786 333.814,99.752 350,121C358.071,131.594 362.234,193.803 360,200C343.929,198.109 333.354,200.076 321.776,157.448C306.03,184.292 315.45,194.598 316,199C311.596,201.517 287.271,195.265 296,171C310.219,131.473 291.588,117.906 284.06,108.252ZM243,299C241.61,300.818 242.365,331.112 253.077,330.684C256.074,330.565 259.454,329.183 264,311C264.217,310.131 266.727,299.5 266.727,299.5C266.727,299.5 263.925,282.299 272.649,262.495C280.536,244.592 298.748,224.671 320.626,211.408C314.119,238.966 305.353,240.706 325,280C330.826,291.653 347,305.256 349.001,306.859C354.517,286.369 352.336,284.289 362.833,266.27C364.946,277.43 365.238,289.21 369.918,299.5C377.465,316.091 389.779,328.808 389.779,328.808C389.779,328.808 409.173,372.654 386,419C371.899,447.202 341.75,455.566 336.974,456.892C330.638,412.505 319.394,394.68 321.155,387.495C321.601,385.675 325.656,385.048 328,384C339.321,378.937 339.901,358.195 331.657,344.213C321.126,326.353 297.695,318.073 280,352C277.235,357.301 278.627,361.072 279.602,365.749C281.668,375.648 287.649,384.649 289,386C291.682,388.682 279.012,439.93 275.988,458.065C208.019,433.453 193.787,348.213 243,299Z" />
+				</svg>
+				<span class="brand-text">BoltFire</span>
+			</div>
+			<ul>
+				<li><a id="nav-settings" class="active" onclick="switchSection('settings')">Settings</a></li>
+				<li><a id="nav-allowlist" onclick="switchSection('allowlist')">Allowlist</a></li>
+				<li><a id="nav-duration" onclick="switchSection('duration')">Duration</a></li>
+				<li><a id="nav-breaks" onclick="switchSection('breaks')">Breaks</a></li>
+				<li><a id="nav-start" onclick="switchSection('start')">Start</a></li>
+			</ul>
+		</nav>
+
+		<!-- Main Workspace Area -->
+		<main id="main-content">
+			<!-- SECTION 1: SETTINGS -->
+			<section id="sec-settings" class="active">
+				<div class="header-container">
+					<h1>Settings</h1>
+					<h2>All BoltFire settings save automatically for future sessions</h2>
+				</div>
+
+				<div class="sub-tabs">
+					<span id="tab-link-preferences" class="sub-tab-link active" onclick="switchSubTab('preferences')">Preferences</span>
+					<span id="tab-link-blocking" class="sub-tab-link" onclick="switchSubTab('blocking')">Blocking</span>
+					<span id="tab-link-notifications" class="sub-tab-link" onclick="switchSubTab('notifications')">Notifications</span>
+					<span id="tab-link-themes" class="sub-tab-link" onclick="switchSubTab('themes')">Themes</span>
+				</div>
+
+				<div class="tab-content-wrapper">
+					<div id="sub-preferences" class="sub-tab-content active">
+						<div class="form-row">
+							<label><input type="checkbox" id="pref-24h"> Use 24 hour notation</label>
+						</div>
+					</div>
+
+					<div id="sub-blocking" class="sub-tab-content">
+						<div class="form-row-split">
+							<div class="form-col">
+								<div class="form-row"><label><input type="checkbox" id="block-taskmgr" checked> Block Windows Task Manager</label></div>
+								<div class="form-row"><label><input type="checkbox" id="block-settings" checked> Block Windows Settings</label></div>
+							</div>
+							<div class="form-col">
+								<span class="input-label">Action to take when blocking apps</span>
+								<select id="block-action" style="width: 180px;">
+									<option value="minimize">Minimize (if possible)</option>
+									<option value="close">Force close</option>
+								</select>
+							</div>
+						</div>
+					</div>
+
+					<div id="sub-notifications" class="sub-tab-content">
+						<div class="form-row"><label><input type="checkbox" id="notify-block" checked> Show notifications when an application is blocked</label></div>
+						<div class="form-row"><label><input type="checkbox" id="notify-break" checked> Show notifications when a break starts or ends</label></div>
+						<div class="form-row"><label><input type="checkbox" id="notify-end" checked> Show a notification when a block ends</label></div>
+					</div>
+
+					<div id="sub-themes" class="sub-tab-content">
+						<div class="form-row-split">
+							<div class="form-col">
+								<span class="input-label" style="display:block; margin-bottom: 10px;">Program UI Paradigms</span>
+								<div class="form-row"><label><input type="radio" name="theme-select" value="micromanager"> Micromanager (Top-Nav Classic)</label></div>
+								<div class="form-row"><label><input type="radio" name="theme-select" value="aftereffects"> After Effects (Dense Pro Workspace)</label></div>
+								<div class="form-row"><label><input type="radio" name="theme-select" value="macos"> macOS System Settings (Sidebar App)</label></div>
+								<div class="form-row"><label><input type="radio" name="theme-select" value="boltfire-iconic"> BoltFire Iconic</label></div>
+								<div class="form-row"><label><input type="radio" name="theme-select" value="fallout" checked> RobCo Terminal (Fallout CRT)</label></div>
+							</div>
+							<div class="form-col" id="custom-colors-container">
+								<span class="input-label" style="display:block; margin-bottom: 10px;">Manual Color Overrides</span>
+								<div class="form-row"><label><input type="color" id="color-accent" value="#1aff80"> Accent Color</label></div>
+								<div class="form-row"><label><input type="color" id="color-accent-hover" value="#00cc55"> Accent Hover</label></div>
+								<div class="form-row"><label><input type="color" id="color-bg-main" value="#051105"> Background</label></div>
+								<div class="form-row"><label><input type="color" id="color-bg-nav" value="#0a220a"> Navigation Bar</label></div>
+								<div class="form-row"><label><input type="color" id="color-bg-panel" value="#0a220a"> Panels & Lists</label></div>
+
+								<div class="form-row">
+									<button class="mmbutton mmbutton-gray" onclick="resetThemeColors()" style="width: 100%; margin-top: 10px;">Reset to Default Colors</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="action-container">
+					<button class="mmbutton mmbutton-green" onclick="switchSection('allowlist')">Continue to allowlist</button>
+				</div>
+			</section>
+
+			<!-- SECTION 2: ALLOWLIST -->
+			<section id="sec-allowlist">
+				<div class="header-container">
+					<h1>Allowlist</h1>
+					<h2>Only the apps that are checked will be allowed to open</h2>
+				</div>
+
+				<div class="form-row-split">
+					<div class="form-col list-panel" id="allowlist-panel">
+						<!-- Dynamically populated by Python / JS -->
+					</div>
+					<div class="form-col side-buttons">
+						<button class="mmbutton mmbutton-gray" onclick="fetchRunningApps()">Add recently opened apps</button>
+						<button class="mmbutton mmbutton-gray" onclick="browseForExe()">Add exe file...</button>
+						<button class="mmbutton mmbutton-gray">Import from file...</button>
+						<button class="mmbutton mmbutton-gray">Export to file...</button>
+					</div>
+				</div>
+
+				<div class="action-container">
+					<button class="mmbutton mmbutton-gray" onclick="switchSection('settings')">Change settings</button>
+					<button class="mmbutton mmbutton-green" onclick="switchSection('duration')">Continue to duration</button>
+				</div>
+			</section>
+
+			<!-- SECTION 3: DURATION -->
+			<section id="sec-duration">
+				<div class="header-container">
+					<h1>Duration</h1>
+					<h2>Only allow selected apps until</h2>
+				</div>
+
+				<div class="form-row" style="gap: 20px;">
+					<label><input type="radio" name="dur-type" value="timer" checked onclick="toggleDurationInput(false)"> Timer</label>
+					<label><input type="radio" name="dur-type" value="restart" onclick="toggleDurationInput(true)"> Restart</label>
+				</div>
+				<div class="form-row" style="gap: 15px; margin-top: 10px; align-items: center;">
+					<select id="duration-select" style="width: 200px;" onchange="updateLiveTime()">
+						<option value="custom">Custom minutes...</option>
+						<option value="15" selected>15 minutes from now</option>
+						<option value="30">30 minutes from now</option>
+						<option value="60">1 hour from now</option>
+					</select>
+
+					<input type="number" id="custom-minutes" value="2" min="1" style="width: 60px; display: none; text-align: center;" oninput="updateLiveTime()">
+					<span id="custom-minutes-label" style="display: none; font-size: 14px; opacity: 0.8;">min</span>
+
+					<input type="text" id="duration-time-display" value="" readonly style="width: 220px; text-align: center; opacity: 0.6;">
+				</div>
+
+				<div class="action-container">
+					<button class="mmbutton mmbutton-gray" onclick="switchSection('allowlist')">Change allowlist</button>
+					<button class="mmbutton mmbutton-green" onclick="switchSection('breaks')">Continue to breaks</button>
+				</div>
+			</section>
+
+			<!-- SECTION 4: BREAKS -->
+			<section id="sec-breaks">
+				<div class="header-container">
+					<h1>Breaks</h1>
+					<h2>All apps on your computer are allowed during breaks</h2>
+				</div>
+
+				<div class="form-row" style="gap: 20px;">
+					<label><input type="radio" name="break-type" value="nobreaks" checked> No Breaks</label>
+					<label><input type="radio" name="break-type" value="pomodoro"> Pomodoro</label>
+					<label><input type="radio" name="break-type" value="allowance"> Allowance</label>
+				</div>
+				<p class="input-label" style="margin-top: 10px;" id="break-desc">Don't allow other apps for the duration of this session.</p>
+
+				<div class="action-container">
+					<button class="mmbutton mmbutton-gray" onclick="switchSection('duration')">Change duration</button>
+					<button class="mmbutton mmbutton-green" onclick="switchSection('start')">View summary</button>
+				</div>
+			</section>
+
+			<!-- SECTION 5: START SUMMARY -->
+			<section id="sec-start">
+				<div class="header-container">
+					<h1>You'll only be able to use</h1>
+				</div>
+				<p class="summary-text" id="summary-apps-list">Chrome<br><span class="summary-subtext">... and BoltFire apps.</span></p>
+
+				<div class="header-container" style="margin-top: 30px;">
+					<h1>Until</h1>
+				</div>
+				<p id="summary-time-desc" class="input-label" style="margin-bottom: 40px;">15 minutes from now, with no breaks.</p>
+
+				<div class="action-container">
+					<button class="mmbutton mmbutton-gray" onclick="switchSection('breaks')">Change breaks</button>
+					<button class="mmbutton mmbutton-green" style="padding: 10px 40px; font-size: 16px;" onclick="triggerSystemLock()">Start</button>
+				</div>
+			</section>
+
+			<!-- SECTION 6: ACTIVE BLOCK SCREEN -->
+			<section id="sec-active">
+				<div id="active-timer-container" style="text-align: center; margin-top: 15vh;">
+					<h2 style="font-weight: 400; font-size: 24px; margin-bottom: 20px; opacity: 1; padding-bottom: 0;">
+						Micromanaging you into <span id="active-apps-label" style="font-weight: bold;"></span> for
+					</h2>
+					<div style="display: flex; justify-content: center; align-items: center; gap: 20px;">
+						<h1 id="countdown-display" style="font-size: 56px; margin: 0; text-transform: none; font-weight: bold;">0 min, 0 sec</h1>
+					</div>
+				</div>
+
+				<div id="session-end-container" style="text-align: center; margin-top: 20vh; display: none;">
+					<button class="mmbutton mmbutton-green" onclick="resetToMainMenu()" style="font-size: 20px; padding: 15px 30px;">Start a new session</button>
+				</div>
+			</section>
+		</main>
+	</div>
+
+	<script src="script.js"></script>
+</body>
+</html>
